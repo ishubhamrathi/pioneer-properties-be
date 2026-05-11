@@ -1,0 +1,14 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.pioneer.HttpKt.configureHttp
+      - com.pioneer.SerializationKt.configureSerialization
+      - com.pioneer.MongoKt.configureMongo
+      - com.pioneer.StatusPagesKt.configureStatusPages
+      - com.pioneer.RoutingKt.configureRouting
+      - com.pioneer.map.MapModuleKt.configureMapController
+db:
+  postgres:
+    locationsTable: locations

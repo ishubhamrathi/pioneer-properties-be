@@ -1,0 +1,26 @@
+# Gradle
+.gradle/
+**/build/
+.kotlin/
+
+# Kotlin/JS and Kotlin Multiplatform generated stores
+kotlin-js-store/
+**/kotlin-js-store/
+
+# IDE and editor files
+.idea/
+*.iml
+.vscode/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and runtime output
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
