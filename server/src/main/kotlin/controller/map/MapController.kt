@@ -1,5 +1,8 @@
-package com.pioneer.map
+package com.pioneer.controller.map
 
+import com.pioneer.domain.map.BoundsDto
+import com.pioneer.domain.map.LocationSearchDto
+import com.pioneer.service.map.MapService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respond

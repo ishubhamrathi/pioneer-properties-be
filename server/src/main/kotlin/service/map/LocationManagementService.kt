@@ -1,5 +1,9 @@
-package com.pioneer.map
+package com.pioneer.service.map
 
+import com.pioneer.dao.map.MapDao
+import com.pioneer.domain.map.LocationCreateRequestDto
+import com.pioneer.domain.map.LocationDto
+import com.pioneer.domain.map.LocationUpdateRequestDto
 import java.util.UUID
 
 interface LocationManagementService {

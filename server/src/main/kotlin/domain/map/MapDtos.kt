@@ -1,4 +1,4 @@
-package com.pioneer.map
+package com.pioneer.domain.map
 
 import kotlinx.serialization.Serializable
 

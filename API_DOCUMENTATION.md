@@ -8,6 +8,30 @@ http://localhost:8080
 
 All request and response bodies are JSON unless noted otherwise.
 
+Protected endpoints use an `Authorization` header:
+
+```text
+Authorization: Bearer <token>
+```
+
+## Database Migrations
+
+Postgres migrations run on application startup through Flyway when `db.postgres.url` or `SUPABASE_DB_URL` is configured.
+
+Migration files live in:
+
+```text
+server/src/main/resources/db/migration
+```
+
+Current migration:
+
+```text
+V1__create_locations_table.sql
+```
+
+It creates the PostGIS extension if needed, the `locations` table, and indexes for map bounds/search queries.
+
 ## General
 
 ### GET /
@@ -32,71 +56,157 @@ Response `200 OK`:
 }
 ```
 
-## Cars
+## Authentication And Users
 
-Car endpoints are backed by MongoDB.
+Authentication endpoints are backed by MongoDB. Passwords are stored as PBKDF2 hashes. Sign in and sign up responses include a bearer token and the authenticated user, including role.
 
-### POST /cars
+Supported roles:
 
-Creates a car.
+```text
+USER
+ADMIN
+```
+
+### POST /api/auth/signup
+
+Creates a user and returns an auth token.
 
 Request:
 
 ```json
 {
-  "brandName": "Toyota",
-  "model": "Innova",
-  "number": "DL01AB1234"
+  "email": "admin@example.com",
+  "password": "password123",
+  "name": "Admin User",
+  "role": "ADMIN"
 }
 ```
+
+`role` is optional and defaults to `USER`.
 
 Response `201 Created`:
 
 ```json
-"663f1f6f8c2b1a001234abcd"
+{
+  "token": "eyJ1c2VySWQiOi...",
+  "user": {
+    "id": "663f1f6f8c2b1a001234abcd",
+    "email": "admin@example.com",
+    "name": "Admin User",
+    "role": "ADMIN"
+  }
+}
 ```
 
-### GET /cars/{id}
+Response `400 Bad Request` when the email is invalid, name is blank, password is shorter than 8 characters, or the email is already registered.
 
-Returns a car by MongoDB object id.
+### POST /api/auth/signin
+
+Authenticates a user and returns an auth token.
+
+Request:
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+```
 
 Response `200 OK`:
 
 ```json
 {
-  "brandName": "Toyota",
-  "model": "Innova",
-  "number": "DL01AB1234"
+  "token": "eyJ1c2VySWQiOi...",
+  "user": {
+    "id": "663f1f6f8c2b1a001234abcd",
+    "email": "admin@example.com",
+    "name": "Admin User",
+    "role": "ADMIN"
+  }
 }
 ```
 
-Response `404 Not Found` when the car does not exist.
+Response `400 Bad Request` when the email or password is invalid.
 
-### PUT /cars/{id}
+### GET /api/auth/me
 
-Replaces a car by MongoDB object id.
+Returns the authenticated user for the bearer token.
+
+Headers:
+
+```text
+Authorization: Bearer <token>
+```
+
+Response `200 OK`:
+
+```json
+{
+  "id": "663f1f6f8c2b1a001234abcd",
+  "email": "admin@example.com",
+  "name": "Admin User",
+  "role": "ADMIN"
+}
+```
+
+Response `401 Unauthorized` when the token is missing, invalid, or expired.
+
+### GET /api/users
+
+Returns all users. Requires `ADMIN`.
+
+Headers:
+
+```text
+Authorization: Bearer <admin-token>
+```
+
+Response `200 OK`:
+
+```json
+[
+  {
+    "id": "663f1f6f8c2b1a001234abcd",
+    "email": "admin@example.com",
+    "name": "Admin User",
+    "role": "ADMIN"
+  }
+]
+```
+
+Response `403 Forbidden` when the token is missing, invalid, expired, or not an admin token.
+
+### PUT /api/users/{id}/role
+
+Updates a user's role. Requires `ADMIN`.
+
+Headers:
+
+```text
+Authorization: Bearer <admin-token>
+```
 
 Request:
 
 ```json
 {
-  "brandName": "Toyota",
-  "model": "Fortuner",
-  "number": "DL01AB1234"
+  "role": "USER"
 }
 ```
 
-Response `200 OK` when updated.
+Response `200 OK`:
 
-Response `404 Not Found` when the car does not exist.
+```json
+{
+  "id": "663f1f6f8c2b1a001234abcd",
+  "email": "admin@example.com",
+  "name": "Admin User",
+  "role": "USER"
+}
+```
 
-### DELETE /cars/{id}
-
-Deletes a car by MongoDB object id.
-
-Response `200 OK` when deleted.
-
-Response `404 Not Found` when the car does not exist.
+Response `403 Forbidden` when the token is missing, invalid, expired, or not an admin token.
 
 ## Locations
 

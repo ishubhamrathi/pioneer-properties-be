@@ -1,5 +1,9 @@
-package com.pioneer.map
+package com.pioneer.dao.map
 
+import com.pioneer.domain.map.BoundsDto
+import com.pioneer.domain.map.LocationDto
+import com.pioneer.domain.map.LocationSearchDto
+import com.pioneer.domain.map.LocationUpdateRequestDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jooq.DSLContext

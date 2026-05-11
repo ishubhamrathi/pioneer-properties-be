@@ -1,4 +1,10 @@
-package com.pioneer.map
+package com.pioneer.service.map
+
+import com.pioneer.dao.map.MapDao
+import com.pioneer.domain.map.BoundsDto
+import com.pioneer.domain.map.LocationDto
+import com.pioneer.domain.map.LocationSearchDto
+import com.pioneer.domain.map.LocationsResponseDto
 
 interface MapService {
     suspend fun getLocations(bounds: BoundsDto, zoom: Int?): LocationsResponseDto

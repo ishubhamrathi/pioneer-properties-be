@@ -1,6 +1,12 @@
-package com.pioneer.map
+package com.pioneer.controller.map
 
 import com.pioneer.createPostgresDslContext
+import com.pioneer.dao.map.JooqMapDao
+import com.pioneer.dao.map.MapDao
+import com.pioneer.service.map.DefaultLocationManagementService
+import com.pioneer.service.map.DefaultMapService
+import com.pioneer.service.map.LocationManagementService
+import com.pioneer.service.map.MapService
 import io.ktor.server.application.Application
 import io.ktor.server.config.tryGetString
 import io.ktor.server.routing.routing

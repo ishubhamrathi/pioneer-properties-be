@@ -5,10 +5,11 @@ ktor:
     modules:
       - com.pioneer.HttpKt.configureHttp
       - com.pioneer.SerializationKt.configureSerialization
-      - com.pioneer.MongoKt.configureMongo
+      - com.pioneer.DatabaseMigrationsKt.configureDatabaseMigrations
       - com.pioneer.StatusPagesKt.configureStatusPages
       - com.pioneer.RoutingKt.configureRouting
-      - com.pioneer.map.MapModuleKt.configureMapController
+      - com.pioneer.controller.map.MapModuleKt.configureMapController
+      - com.pioneer.controller.auth.UserModuleKt.configureUserController
 db:
   postgres:
     locationsTable: locations

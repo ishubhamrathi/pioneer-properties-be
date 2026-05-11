@@ -29,6 +29,8 @@ dependencies {
     implementation(libs.jooq)
     implementation(libs.postgresql)
     implementation(libs.hikari)
+    implementation(libs.flyway.core)
+    implementation(libs.flyway.postgresql)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

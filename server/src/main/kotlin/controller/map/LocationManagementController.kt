@@ -1,5 +1,8 @@
-package com.pioneer.map
+package com.pioneer.controller.map
 
+import com.pioneer.domain.map.LocationCreateRequestDto
+import com.pioneer.domain.map.LocationUpdateRequestDto
+import com.pioneer.service.map.LocationManagementService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive

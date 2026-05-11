@@ -1,5 +1,11 @@
-package com.pioneer.map
+package com.pioneer.service.map
 
+import com.pioneer.dao.map.MapDao
+import com.pioneer.domain.map.BoundsDto
+import com.pioneer.domain.map.LocationCreateRequestDto
+import com.pioneer.domain.map.LocationDto
+import com.pioneer.domain.map.LocationSearchDto
+import com.pioneer.domain.map.LocationUpdateRequestDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
