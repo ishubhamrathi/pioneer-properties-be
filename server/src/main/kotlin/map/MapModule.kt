@@ -11,9 +11,14 @@ fun Application.configureMapController() {
     val dao: MapDao = JooqMapDao(dsl, tableName)
     val service: MapService = DefaultMapService(dao)
     val controller = MapController(service)
+    val managementService: LocationManagementService = DefaultLocationManagementService(dao)
+    val managementController = LocationManagementController(managementService)
 
     routing {
         with(controller) {
+            routes()
+        }
+        with(managementController) {
             routes()
         }
     }

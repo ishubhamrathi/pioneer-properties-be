@@ -6,4 +6,10 @@ interface MapDao {
     suspend fun findById(id: String): LocationDto?
 
     suspend fun search(search: LocationSearchDto, limit: Int): List<LocationDto>
+
+    suspend fun create(location: LocationDto): LocationDto
+
+    suspend fun update(id: String, location: LocationUpdateRequestDto): LocationDto?
+
+    suspend fun delete(id: String): Boolean
 }

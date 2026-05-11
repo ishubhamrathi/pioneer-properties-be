@@ -83,6 +83,78 @@ class JooqMapDao(
             conditions.joinToString(" AND ") to values
         }
 
+    override suspend fun create(location: LocationDto): LocationDto =
+        withContext(Dispatchers.IO) {
+            dsl.execute(
+                """
+                INSERT INTO ${tableSql()} (
+                    id,
+                    name,
+                    category,
+                    geom,
+                    description,
+                    image,
+                    address,
+                    rating,
+                    icon,
+                    color
+                )
+                VALUES (?, ?, ?, ST_SetSRID(ST_MakePoint(?, ?), 4326), ?, ?, ?, ?, ?, ?)
+                """.trimIndent(),
+                location.id,
+                location.name,
+                location.category,
+                location.lng,
+                location.lat,
+                location.description,
+                location.image,
+                location.address,
+                location.rating,
+                location.icon,
+                location.color,
+            )
+
+            requireNotNull(findById(location.id)) { "Created location could not be loaded" }
+        }
+
+    override suspend fun update(id: String, location: LocationUpdateRequestDto): LocationDto? =
+        withContext(Dispatchers.IO) {
+            val updated = dsl.execute(
+                """
+                UPDATE ${tableSql()}
+                SET
+                    name = ?,
+                    category = ?,
+                    geom = ST_SetSRID(ST_MakePoint(?, ?), 4326),
+                    description = ?,
+                    image = ?,
+                    address = ?,
+                    rating = ?,
+                    icon = ?,
+                    color = ?
+                WHERE id = ?
+                """.trimIndent(),
+                location.name,
+                location.category,
+                location.lng,
+                location.lat,
+                location.description,
+                location.image,
+                location.address,
+                location.rating,
+                location.icon,
+                location.color,
+                id,
+            )
+
+            if (updated == 0) null else findById(id)
+        }
+
+    override suspend fun delete(id: String): Boolean =
+        withContext(Dispatchers.IO) {
+            dsl.execute("DELETE FROM ${tableSql()} WHERE id = ?", id) > 0
+        }
+
     private suspend fun queryLocations(
         limit: Int,
         whereSql: (table: org.jooq.Table<*>) -> Pair<String, List<Any>>,
@@ -124,4 +196,6 @@ class JooqMapDao(
         icon = get(iconField),
         color = get(colorField),
     )
+
+    private fun tableSql(): String = dsl.render(DSL.table(DSL.name(tableName)))
 }
